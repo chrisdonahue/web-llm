@@ -1,0 +1,23 @@
+# Import Ubuntu/CUDA/cuDNN
+FROM emscripten/emsdk:3.1.50
+
+# Configure shell
+ENV DEBIAN_FRONTEND=noninteractive
+SHELL ["/bin/bash", "-c"]
+RUN apt update --fix-missing
+
+# Install git
+RUN apt install -y git
+
+# Download code
+WORKDIR /
+RUN git clone https://github.com/mlc-ai/web-llm.git
+WORKDIR /web-llm
+
+# Prepare deps
+RUN ./scripts/prep_deps.sh
+
+# Serve
+WORKDIR /web-llm/examples/get-started
+RUN npm install
+CMD npm start
